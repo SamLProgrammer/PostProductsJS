@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+</head>
+<body>
+      <h1 class = "title is-1">
+          Wellcome to Products Sale
+          </h1>
+          <h1 class = "title is-2">Products List: </h1>
+          <div id= "listHolder">
+          </div>
+      <input type="text" id="name" placeholder="Product Name"/>
+      <input type="text" id="price" placeholder="Product Price"/>
+      <script>
+        function send () {
+          let json = {name: document.getElementById("name").value, 
+          price : document.getElementById("price").value};
+          let xhr = new window.XMLHttpRequest()
+          let listHolder = document.getElementById("listHolder");
+          xhr.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                  let data = JSON.parse(xhr.response)
+                  let productNameTexts = document.getElementsByName("productName")
+                  if(productNameTexts != null) {
+                    for(i = productNameTexts.length-1; i >= 0; i--) {
+                      productNameTexts[i].remove();
+                  }
+                }
+                  for (var key of data) {
+                    var text = document.createElement("H1");
+                    text.innerHTML = key.name + "=>" + key.price
+                    text.classList.add("title");
+                    text.classList.add("is-3");
+                    text.setAttribute("name", "productName");
+                    listHolder.appendChild(text)
+                }
+              }
+        }
+        xhr.open('POST', 'http://localhost:4000/num', true)
+        xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+        xhr.send(JSON.stringify(json))
+      }
+      </script>
+      <button class="button is-success" type="button" 
+      value="Add Product" name="Send" onclick="send()" >
+        Send </button>
+    </body>
+</html>
